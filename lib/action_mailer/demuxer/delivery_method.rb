@@ -1,8 +1,6 @@
 module ActionMailer
   module Demuxer
     class DeliveryMethod
-      MissingType = Class.new(StandardError)
-
       attr_accessor :settings
 
       def initialize(values)
@@ -10,9 +8,7 @@ module ActionMailer
       end
 
       def deliver!(mail)
-        type   = mail.default :type
-        raise MissingType unless type
-
+        type   = mail.default(:type) || :email
         method = settings[type.to_sym]
         ActionMailer::Base.wrap_delivery_behavior(mail, method)
         mail.deliver!

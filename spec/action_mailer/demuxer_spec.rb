@@ -23,6 +23,8 @@ ActionMailer::Base.delivery_method = :demuxer
 ActionMailer::Base.demuxer_settings = { email: :test, sms: SmsDeliveryMethod }
 
 class NoType < ActionMailer::Base
+  default from: 'from@example.com'
+
   def welcome
     mail to: 'foo@example.com', body: 'text'
   end
@@ -49,10 +51,8 @@ describe ActionMailer::Demuxer do
     SmsDeliveryMethod.deliveries = []
   end
 
-  it 'raises an exception if the mailer does not define a type' do
-    expect {
-      NoType.welcome.deliver
-    }.to raise_error ActionMailer::Demuxer::DeliveryMethod::MissingType
+  it 'defaults to email' do
+    expect { NoType.welcome.deliver }.to change { ActionMailer::Base.deliveries.length }.by(1)
   end
 
   it 'demuxes email' do
