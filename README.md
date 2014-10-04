@@ -1,4 +1,4 @@
-# Action::Mailer Demuxer
+# ActionMailer Demuxer
 
 A ruby gem for demuxing ActionMailer delivery methods.
 
